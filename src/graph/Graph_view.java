@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -19,9 +21,13 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 
 
+
+
+
 public class Graph_view extends Frame implements ActionListener,WindowListener {
 	private Button button1 = new Button("Linechart");
 	private Button button2 = new Button("Barchart");
+	
   public Graph_view(int a) {
 		  addWindowListener(this);
 		  setTitle("Graph");
@@ -34,13 +40,38 @@ public class Graph_view extends Frame implements ActionListener,WindowListener {
 		  setLayout(new FlowLayout(FlowLayout.CENTER));
 		  DefaultCategoryDataset data = new DefaultCategoryDataset();
 		  
-		  data.addValue(300, "USA", "2005");
-		  data.addValue(500, "USA", "2006");
-		  data.addValue(120, "USA", "2007");
 		  
-		  data.addValue(200, "China", "2005");
-		  data.addValue(400, "China", "2006");
-		  data.addValue(320, "China", "2007");
+		    String id, year;
+			int ton;
+			String name;
+			ResultSet rs;
+			MySQL mysql = new MySQL();
+			rs = mysql.selectAll();
+	      
+		  try {
+				while(rs.next()){
+					
+					
+					
+				    id = rs.getString("id");
+				    name = rs.getString("name");
+				    year = rs.getString("year");
+				    ton = rs.getInt("ton");
+				    System.out.println("ID：" + id);
+				    System.out.println("name：" + name);
+				    System.out.println("year：" + year);
+				    System.out.println("ton：" + ton);
+				    data.addValue(ton, name, year);
+				    
+				}  //try catchで囲む
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  
+		  
+		  
+		  
 		  if(a==0) {
 		    JFreeChart chart = 
 		      ChartFactory.createLineChart("Import Volume",
@@ -126,5 +157,5 @@ public class Graph_view extends Frame implements ActionListener,WindowListener {
 				 graph.setVisible(true);
 				 }
 			
-}
-}
+            }
+     }
